@@ -135,4 +135,3 @@ def generar_planilla(dni, nombre, mes, anio=2025):
     # Guardar archivo en la carpeta
     nombre_archivo = os.path.join(carpeta, f"Planilla_{nombre.replace(' ', '_')}_{mes}_{anio}.docx")
     doc.save(nombre_archivo)
-    print(f"Planilla generada: {nombre_archivo}")

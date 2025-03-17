@@ -1,10 +1,33 @@
+import time
 from scripts.planilla_asistencia import generar_planilla
+import os
 
 import tkinter as tk
 from tkinter import messagebox
 import webbrowser
 
 def generar_interfaz():
+    def abrir_directorio():
+        os.startfile("planillas-asistencia")
+
+    def mostrar_mensaje():
+        ventana = tk.Toplevel(root)
+        ventana.title("Éxito")
+        ventana.geometry("300x150")
+        ventana.iconbitmap(r"assets\icon.ico")
+        ventana.resizable(False, False)
+        
+        label = tk.Label(ventana, text="Planilla generada correctamente", padx=10, pady=10)
+        label.pack()
+
+        # Botón para cerrar el mensaje
+        btn_ok = tk.Button(ventana, text="OK", width=12, command=ventana.destroy)
+        btn_ok.pack(side="left", padx=20, pady=20)
+
+        # Botón para abrir la carpeta
+        btn_ir = tk.Button(ventana, text="Ir a la planilla", width=12, command=abrir_directorio)
+        btn_ir.pack(side="right", padx=20, pady=20)
+
     def enviar_datos():
         dni = entry_dni.get()
         nombre = entry_nombre.get()
@@ -12,8 +35,8 @@ def generar_interfaz():
         tipo_documento = entry_tipo_documento.get()
         if tipo_documento == "Planilla de Asistencia":
             generar_planilla(dni, nombre, mes)
-            messagebox.showinfo("Éxito", "Planilla generada correctamente")
-        # Agrega más condiciones para otros tipos de documentos aquí
+            mostrar_mensaje()
+            
 
     def mostrar_formulario(*args):
         global entry_dni, entry_nombre, entry_mes
@@ -46,6 +69,8 @@ def generar_interfaz():
     root.title("Generador de Documentos")
     root.geometry("600x400")
     root.resizable(False, False)
+    root.iconbitmap(r"assets\icon.ico")
+
 
     tk.Label(root, text="Tipo de Documento:").pack(pady=5)
     tipos_documento = ["Planilla de Asistencia", "Otro Documento"]
