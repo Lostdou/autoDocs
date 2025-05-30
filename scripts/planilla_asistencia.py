@@ -13,13 +13,25 @@ meses_es_en = {
     "Septiembre": "September", "Octubre": "October", "Noviembre": "November", "Diciembre": "December"
 }
 
-def generar_planilla(dni, nombre, mes, anio=2025):
+def generar_planilla(dni, nombre, mes, diasTarde, anio=2025):
     if mes not in meses_es_en:
         print("Error: Nombre del mes no válido. Inténtelo de nuevo.")
         return
     
     mes_ingles = meses_es_en[mes]
     num_mes = datetime.strptime(mes_ingles, "%B").month  
+
+    # Mapea diasTarde del 0 al 6 a los días de la semana
+    diasConNumero = {
+        0: "Lunes",
+        1: "Martes",
+        2: "Miércoles",
+        3: "Jueves",
+        4: "Viernes",
+        5: "Sábado",
+        6: "Domingo"
+    }
+    diasTardeSeleccionados = [diasConNumero[i] for i, seleccionado in enumerate(diasTarde) if seleccionado.get()]
 
     # Crear documento Word
     doc = Document()
@@ -87,8 +99,8 @@ def generar_planilla(dni, nombre, mes, anio=2025):
         
         row_cells = tabla.add_row().cells
         
-        # Si es sábado (5), agregar una sola fila para el fin de semana
-        if weekday == 5:
+        # Si es sábado o domingo (5 o 6), agregar una sola fila para el fin de semana
+        if weekday == 5 or weekday == 6:
             # Llenar con guiones los campos fecha y total horas
             row_cells[0].text = "-----"  # Fecha
             row_cells[1].text = ""       # Hora de entrada
@@ -96,7 +108,21 @@ def generar_planilla(dni, nombre, mes, anio=2025):
             row_cells[3].text = ""       # Hora de salida
             row_cells[4].text = "-----"  # Firma salida
             row_cells[5].text = "-----"  # Total horas
-            dia += 2  # Saltar al lunes
+            if weekday == 5:  # Si es domingo, saltar al lunes
+                dia += 2
+            elif weekday == 6:  # Si es domingo, saltar al lunes
+                dia += 1  # Saltar al lunes
+        
+        ## Modifica este elif para que sea con los días de la tarde seleccionados
+        elif weekday in [0, 1, 2, 3, 4] and diasConNumero[weekday] in diasTardeSeleccionados:
+
+            row_cells[0].text = fecha_actual.strftime("%d/%m/%Y")  # Fecha
+            row_cells[1].text = "16:00"  # Hora de entrada
+            row_cells[2].text = ""       # Firma entrada
+            row_cells[3].text = "21:00"  # Hora de salida
+            row_cells[4].text = ""       # Firma salida
+            row_cells[5].text = "06:00"  # Total horas
+            dia += 1
         else:
             # Días laborables (lunes a viernes)
             row_cells[0].text = fecha_actual.strftime("%d/%m/%Y")  # Fecha
