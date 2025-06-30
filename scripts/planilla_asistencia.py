@@ -117,7 +117,7 @@ def generar_planilla(dni, nombre, mes, diasTarde, anio=2025):
         elif weekday in [0, 1, 2, 3, 4] and diasConNumero[weekday] in diasTardeSeleccionados:
 
             row_cells[0].text = fecha_actual.strftime("%d/%m/%Y")  # Fecha
-            row_cells[1].text = "16:00"  # Hora de entrada
+            row_cells[1].text = "15:00"  # Hora de entrada
             row_cells[2].text = ""       # Firma entrada
             row_cells[3].text = "21:00"  # Hora de salida
             row_cells[4].text = ""       # Firma salida
